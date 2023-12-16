@@ -30,7 +30,10 @@ class CurrencyFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            refreshLiveRates()
+            binding.swipeRefreshLayout.isRefreshing = false
+        }
         val currencyRecyclerView = binding.currencyRecyclerView
         currencyRecyclerView.setHasFixedSize(true)
         val currencyAdapter = CurrencyAdapter()
@@ -38,17 +41,32 @@ class CurrencyFragment : Fragment() {
         viewModel.cryptoList.observe(viewLifecycleOwner) {
             it?.let {
                 currencyAdapter.submitList(it)
-
-                Log.e("Ob", "Observing cryptoList")
-
             }
         }
 
-        viewModel.liveRateMap.observe(viewLifecycleOwner){
+        viewModel.liveRateMap.observe(viewLifecycleOwner) {
+            Log.e("API", "live rate observed")
             it?.let {
                 currencyAdapter.updateLiveRating(it)
             }
         }
+    }
+
+    private fun refreshLiveRates() {
+        viewModel.forceRefreshLiveRates()
+    }
+
+    // live rates will only be fetched when fragment is visible
+    override fun onStart() {
+        super.onStart()
+        Log.e("API","inside onstart start fetching")
+        viewModel.startLiveRateFetching()
+    }
+
+    // live rates will not fetched when fragment is not visible
+    override fun onStop() {
+        super.onStop()
+        viewModel.stopLiveRateFetching()
     }
 
     override fun onDestroyView() {
