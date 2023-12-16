@@ -53,10 +53,11 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
     implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
 
-    // Retrofit
-    implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
-    implementation("com.squareup.moshi:moshi:1.9.3")
-    implementation("com.squareup.moshi:moshi-kotlin:1.9.3")
+    // Retrofit - Gson
+    val retrofit_vesion = "2.9.0"
+    implementation("com.google.code.gson:gson:2.10.1")
+    implementation("com.squareup.retrofit2:retrofit:$retrofit_vesion")
+    implementation("com.squareup.retrofit2:converter-gson:$retrofit_vesion")
 
     // Dagger-Hilt
     val hilt_version = "2.48.1"

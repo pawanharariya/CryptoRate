@@ -3,12 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/FirstFragment">
+    app:startDestination="@id/currency_fragment">
 
     <fragment
-        android:id="@+id/FirstFragment"
-        android:name="com.psh.project.cryptorate.ui.list.FirstFragment"
-        android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_first">
-    </fragment>
+        android:id="@+id/currency_fragment"
+        android:name="com.psh.project.cryptorate.ui.currency.CurrencyFragment"
+        android:label="@string/currency_fragment_label"
+        tools:layout="@layout/fragment_currency"/>
 </navigation>

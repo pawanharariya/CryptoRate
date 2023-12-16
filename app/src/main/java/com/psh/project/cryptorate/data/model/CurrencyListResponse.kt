@@ -1,18 +1,22 @@
 package com.psh.project.cryptorate.data.model
 
-import com.squareup.moshi.JsonClass
+import com.google.gson.annotations.SerializedName
 
-@JsonClass(generateAdapter = true)
 data class CurrencyListResponse(
     /**
-     * Whether its success response or error response
+     * Whether response is success or not
      */
-    val success : Boolean,
+    val success: Boolean,
 
-    
+    /**
+     * Map of Crypto Symbol to Crypto [Currency]
+     */
+    @SerializedName("crypto")
+    val currencies: MutableMap<String, Currency>?,
+
     /**
      * Received in case of Error
      * Null when [success] = true
      */
-    val error : Error?
+    val error: Error?
 )

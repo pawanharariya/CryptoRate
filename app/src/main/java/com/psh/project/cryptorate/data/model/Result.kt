@@ -1,4 +1,4 @@
-package com.psh.project.cryptorate.data.utils
+package com.psh.project.cryptorate.data.model
 
 sealed class Result<T>(
     val data: T? = null,
