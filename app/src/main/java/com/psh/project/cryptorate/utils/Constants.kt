@@ -1,4 +1,4 @@
-package com.psh.project.cryptorate.data.utils
+package com.psh.project.cryptorate.utils
 
 class Constants {
     companion object {

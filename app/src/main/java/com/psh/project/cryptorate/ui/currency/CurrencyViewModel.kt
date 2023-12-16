@@ -6,10 +6,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
+import com.psh.project.cryptorate.Event
+import com.psh.project.cryptorate.data.CryptoRepository
 import com.psh.project.cryptorate.data.model.Currency
 import com.psh.project.cryptorate.data.model.Result.Error
 import com.psh.project.cryptorate.data.model.Result.Success
-import com.psh.project.cryptorate.repository.CryptoRepository
+import com.psh.project.cryptorate.utils.SnackbarData
+import com.psh.project.cryptorate.utils.SnackbarType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -21,12 +24,12 @@ import javax.inject.Inject
 @HiltViewModel
 class CurrencyViewModel @Inject constructor(private val repository: CryptoRepository) :
     ViewModel() {
-    private val cryptoMap = MutableLiveData<Map<String, Currency>?>()
+    private val currencyMap = MutableLiveData<Map<String, Currency>?>()
 
     /**
      * Covert currency map to list for adapter
      */
-    val cryptoList: LiveData<List<Currency>> = cryptoMap.map {
+    val currencyList: LiveData<List<Currency>> = currencyMap.map {
         it?.values?.toList() ?: emptyList()
     }
 
@@ -35,27 +38,43 @@ class CurrencyViewModel @Inject constructor(private val repository: CryptoReposi
 
     private var repeatedLiveRateFetchJob: Job? = null
 
+    /**
+     * LiveData for all snackbar events
+     */
+    private val _snackbarEvent = MutableLiveData<Event<SnackbarData>>()
+    val snackbarEvent: LiveData<Event<SnackbarData>> = _snackbarEvent
+
     init {
+        fetchCurrencyList()
+    }
+
+    private fun fetchCurrencyList() {
         viewModelScope.launch {
             when (val response = repository.getCurrencyList()) {
-                is Success -> cryptoMap.value = response.data
-                is Error -> Log.e("API RESPONSE ---->>>", response.message ?: "no msg")
+                is Success -> currencyMap.value = response.data
+                is Error -> _snackbarEvent.postValue(
+                    Event(
+                        SnackbarData(
+                            response.message,
+                            SnackbarType.ERROR
+                        ) { retryCurrencyFetch() })
+                )
             }
-            startLiveRateFetching()
+            forceRefreshLiveRates()
         }
     }
 
-    private fun updateCryptoListWithLiveRate() {
+    private fun updateCurrencyListWithLiveRate() {
         liveRateMap.value?.let {
             for (item in it) {
-                cryptoMap.value?.get(item.key)?.exchangeRate = item.value.toString()
+                currencyMap.value?.get(item.key)?.exchangeRate = item.value.toString()
             }
         }
     }
 
     fun startLiveRateFetching() {
         if (repeatedLiveRateFetchJob?.isActive == true) {
-            Log.e("API","fetching job already active")
+            Log.e("API", "fetching job already active")
             return
         }
         repeatedLiveRateFetchJob = viewModelScope.launch(Dispatchers.IO) {
@@ -68,7 +87,7 @@ class CurrencyViewModel @Inject constructor(private val repository: CryptoReposi
 
     fun stopLiveRateFetching() {
         if (repeatedLiveRateFetchJob?.isActive == true) {
-            Log.e("API","fetching job cancelled")
+            Log.e("API", "fetching job cancelled")
             repeatedLiveRateFetchJob?.cancel()
         }
     }
@@ -78,10 +97,12 @@ class CurrencyViewModel @Inject constructor(private val repository: CryptoReposi
         when (val response = repository.getLiveRates()) {
             is Success -> {
                 _liveRateMap.postValue(response.data)
-                updateCryptoListWithLiveRate()
+                updateCurrencyListWithLiveRate()
             }
 
-            is Error -> Log.e("API RESPONSE ---->>>", response.message ?: "no msg")
+            is Error -> _snackbarEvent.postValue(
+                Event(SnackbarData(response.message, SnackbarType.ERROR) { retryCurrencyFetch() })
+            )
         }
     }
 
@@ -89,6 +110,10 @@ class CurrencyViewModel @Inject constructor(private val repository: CryptoReposi
         viewModelScope.launch {
             fetchLiveRates()
         }
+    }
+
+    private fun retryCurrencyFetch() {
+        fetchCurrencyList()
     }
 }
 

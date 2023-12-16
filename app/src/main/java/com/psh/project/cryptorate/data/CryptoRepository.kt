@@ -1,4 +1,4 @@
-package com.psh.project.cryptorate.repository
+package com.psh.project.cryptorate.data
 
 import android.app.Application
 import android.content.Context

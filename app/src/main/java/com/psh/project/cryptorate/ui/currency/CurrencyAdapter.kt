@@ -1,6 +1,5 @@
 package com.psh.project.cryptorate.ui.currency
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -39,22 +38,19 @@ class CurrencyAdapter : ListAdapter<Currency, CurrencyViewHolder>(DiffCallback) 
     }
 
     override fun onBindViewHolder(holder: CurrencyViewHolder, position: Int) {
-        Log.e("Adapter", "Adapter inside plain onBindViewHolder")
         val currency = getItem(position)
         holder.bind(currency)
     }
 
     override fun onBindViewHolder(holder: CurrencyViewHolder, position: Int, payload: List<Any>) {
         val currency = getItem(position)
-        Log.e("Adapter", "Adapter inside payload onBindViewHolder")
-        if(payload.isEmpty()) {
+        if (payload.isEmpty()) {
             holder.bind(currency)
-        }
-        else holder.updateRating(payload[0] as Double)
+        } else holder.updateRating(payload[0] as Double)
     }
 
-    fun updateLiveRating(liveRate : Map<String, Double>){
-        for(i in 0..<itemCount){
+    fun updateLiveRating(liveRate: Map<String, Double>) {
+        for (i in 0..<itemCount) {
             val item = getItem(i)
             notifyItemChanged(i, liveRate[item.symbol])
         }

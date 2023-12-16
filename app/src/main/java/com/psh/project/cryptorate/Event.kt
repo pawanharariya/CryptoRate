@@ -1,7 +1,5 @@
 package com.psh.project.cryptorate
 
-import androidx.lifecycle.Observer
-
 /**
  * Wrapper for data that is exposed via a LiveData that represents an event.
  */
@@ -21,15 +19,4 @@ open class Event<out T>(private val content: T) {
     }
 
     fun peekContent(): T = content
-}
-
-/**
- * Observer for events
- */
-class EventObserver<T>(private val onEventUnhandledContent: (T) -> Unit) : Observer<Event<T>> {
-    override fun onChanged(value: Event<T>) {
-        value.getContentIfNotHandled()?.let {
-            onEventUnhandledContent(it)
-        }
-    }
 }

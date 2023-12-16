@@ -2,7 +2,7 @@ package com.psh.project.cryptorate.di
 
 import com.google.gson.GsonBuilder
 import com.psh.project.cryptorate.data.CryptoService
-import com.psh.project.cryptorate.data.utils.Constants
+import com.psh.project.cryptorate.utils.Constants
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

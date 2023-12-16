@@ -2,7 +2,7 @@ package com.psh.project.cryptorate.data
 
 import com.psh.project.cryptorate.data.model.CurrencyListResponse
 import com.psh.project.cryptorate.data.model.LiveRateResponse
-import com.psh.project.cryptorate.data.utils.Constants
+import com.psh.project.cryptorate.utils.Constants
 import retrofit2.http.GET
 
 interface CryptoService {
