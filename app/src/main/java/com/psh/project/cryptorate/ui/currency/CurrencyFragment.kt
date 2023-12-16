@@ -1,11 +1,14 @@
 package com.psh.project.cryptorate.ui.currency
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.psh.project.cryptorate.R
 import com.psh.project.cryptorate.databinding.FragmentCurrencyBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -13,36 +16,38 @@ import dagger.hilt.android.AndroidEntryPoint
 class CurrencyFragment : Fragment() {
 
     private var _binding: FragmentCurrencyBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
-    val viewModel: CurrencyViewModel by viewModels()
+    private val viewModel: CurrencyViewModel by viewModels()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
-        _binding = FragmentCurrencyBinding.inflate(inflater, container, false)
+        _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_currency, container, false)
         return binding.root
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val currencyRecyclerView = binding.currencyRecyclerView
+        currencyRecyclerView.setHasFixedSize(true)
+        val currencyAdapter = CurrencyAdapter()
+        currencyRecyclerView.adapter = currencyAdapter
         viewModel.cryptoList.observe(viewLifecycleOwner) {
-            if (it != null) {
-                val sb = StringBuilder()
-                for (currency in it) {
-                    sb.append(it.toString())
-                }
-                binding.textviewFirst.text = sb.toString()
+            it?.let {
+                currencyAdapter.submitList(it)
+
+                Log.e("Ob", "Observing cryptoList")
+
             }
         }
-        binding.buttonFirst.setOnClickListener {
-//            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
+
+        viewModel.liveRateMap.observe(viewLifecycleOwner){
+            it?.let {
+                currencyAdapter.updateLiveRating(it)
+            }
         }
     }
 

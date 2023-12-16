@@ -37,7 +37,7 @@ android {
         jvmTarget = "1.8"
     }
     buildFeatures {
-        viewBinding = true
+        dataBinding = true
     }
 }
 
@@ -68,6 +68,9 @@ dependencies {
     val coroutine_version = "1.7.1"
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine_version")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine_version")
+
+    // Picasso for Image Loading
+    implementation("com.squareup.picasso:picasso:2.71828")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

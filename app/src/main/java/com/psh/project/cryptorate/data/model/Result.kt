@@ -1,12 +1,10 @@
 package com.psh.project.cryptorate.data.model
 
-sealed class Result<T>(
-    val data: T? = null,
-    val message: String? = null
-) {
+/**
+ * A generic class that holds the network api response whether success or error
+ */
+sealed class Result<out R> {
 
-    class Success<T>(data: T) : Result<T>(data)
-
-    class Error<T>(message: String?) : Result<T>(message = message)
-
+    data class Success<out T>(val data: T) : Result<T>()
+    data class Error(val message: String?) : Result<Nothing>()
 }

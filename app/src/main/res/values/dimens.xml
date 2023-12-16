@@ -1,3 +1,23 @@
 <resources>
-    <dimen name="fab_margin">16dp</dimen>
+    <!--     Text sizes -->
+    <dimen name="text_extra_small">10sp</dimen>
+    <dimen name="text_small">12sp</dimen>
+    <dimen name="text_normal">14sp</dimen>
+    <dimen name="text_large">16sp</dimen>
+    <dimen name="text_extra_large">18sp</dimen>
+
+    <!--    Margins -->
+    <dimen name="margin_extra_small">8dp</dimen>
+    <dimen name="margin_small">12dp</dimen>
+    <dimen name="margin_normal">16dp</dimen>
+    <dimen name="margin_large">20dp</dimen>
+    <dimen name="margin_extra_large">24dp</dimen>
+
+    <!-- Paddings -->
+    <dimen name="padding_small">12dp</dimen>
+    <dimen name="padding_normal">16dp</dimen>
+    <dimen name="padding_start_version">4dp</dimen>
+    <dimen name="padding_end_version">2dp</dimen>
+    <dimen name="padding_vertical_version">1dp</dimen>
+
 </resources>
