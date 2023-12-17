@@ -10,38 +10,66 @@
             type="com.psh.project.cryptorate.data.model.Currency" />
     </data>
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_normal"
         android:padding="@dimen/padding_normal">
 
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/image"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="@dimen/currency_image_dimen"
+            android:layout_height="@dimen/currency_image_dimen"
             android:importantForAccessibility="no"
-            app:currencyImage="@{currency.iconUrl}" />
+            app:currencyImage="@{currency.iconUrl}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/circular_image"
+            tools:src="@drawable/ic_launcher_background" />
 
         <TextView
             android:id="@+id/name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_normal"
+            android:ellipsize="end"
+            android:text="@{currency.name}"
+            android:maxLines="1"
+            android:textStyle="bold"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/text_large"
+            app:layout_constraintBottom_toTopOf="@id/symbol"
+            app:layout_constraintEnd_toStartOf="@id/rate"
+            app:layout_constraintStart_toEndOf="@id/image"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:text="Bitcoin" />
+
+        <TextView
+            android:id="@+id/symbol"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_normal"
-            android:layout_toEndOf="@id/image"
-            android:text="@{currency.name}"
+            android:text="@{currency.symbol}"
+            android:textColor="@color/text_color_secondary"
             android:textSize="@dimen/text_large"
-            tools:text="Bitcoin" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/image"
+            app:layout_constraintTop_toBottomOf="@id/name"
+            tools:text="BTC" />
 
         <TextView
             android:id="@+id/rate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/name"
-            android:layout_margin="@dimen/margin_normal"
-            android:layout_toEndOf="@id/image"
-            android:text="@{currency.exchangeRate}"
+            android:layout_marginStart="@dimen/margin_normal"
+            app:exchangeRate="@{currency.exchangeRate}"
             android:textSize="@dimen/text_large"
+            android:textColor="@color/text_color"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@id/name"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="40000USD" />
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

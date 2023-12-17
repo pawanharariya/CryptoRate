@@ -1,10 +1,8 @@
 package com.psh.project.cryptorate.ui.currency
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.psh.project.cryptorate.Event
 import com.psh.project.cryptorate.data.CryptoRepository
@@ -24,14 +22,8 @@ import javax.inject.Inject
 @HiltViewModel
 class CurrencyViewModel @Inject constructor(private val repository: CryptoRepository) :
     ViewModel() {
-    private val currencyMap = MutableLiveData<Map<String, Currency>?>()
-
-    /**
-     * Covert currency map to list for adapter
-     */
-    val currencyList: LiveData<List<Currency>> = currencyMap.map {
-        it?.values?.toList() ?: emptyList()
-    }
+    private val _currencyList = MutableLiveData<List<Currency>?>()
+    val currencyList: LiveData<List<Currency>?> = _currencyList
 
     private val _liveRateMap = MutableLiveData<Map<String, Double>?>()
     val liveRateMap: LiveData<Map<String, Double>?> = _liveRateMap
@@ -51,7 +43,7 @@ class CurrencyViewModel @Inject constructor(private val repository: CryptoReposi
     private fun fetchCurrencyList() {
         viewModelScope.launch {
             when (val response = repository.getCurrencyList()) {
-                is Success -> currencyMap.value = response.data
+                is Success -> _currencyList.postValue(response.data)
                 is Error -> _snackbarEvent.postValue(
                     Event(
                         SnackbarData(
@@ -65,16 +57,17 @@ class CurrencyViewModel @Inject constructor(private val repository: CryptoReposi
     }
 
     private fun updateCurrencyListWithLiveRate() {
-        liveRateMap.value?.let {
-            for (item in it) {
-                currencyMap.value?.get(item.key)?.exchangeRate = item.value.toString()
+        liveRateMap.value?.let { ratesMap ->
+            _currencyList.value?.let {
+                for (item in it) {
+                    item.exchangeRate = ratesMap[item.symbol] ?: 0.0
+                }
             }
         }
     }
 
     fun startLiveRateFetching() {
         if (repeatedLiveRateFetchJob?.isActive == true) {
-            Log.e("API", "fetching job already active")
             return
         }
         repeatedLiveRateFetchJob = viewModelScope.launch(Dispatchers.IO) {
@@ -87,14 +80,12 @@ class CurrencyViewModel @Inject constructor(private val repository: CryptoReposi
 
     fun stopLiveRateFetching() {
         if (repeatedLiveRateFetchJob?.isActive == true) {
-            Log.e("API", "fetching job cancelled")
             repeatedLiveRateFetchJob?.cancel()
         }
     }
 
     private suspend fun fetchLiveRates() {
-        Log.e("API RESPONSE", "---->>>Fetching live rate")
-        when (val response = repository.getLiveRates()) {
+        when (val response = repository.getLiveRatesFromNetwork()) {
             is Success -> {
                 _liveRateMap.postValue(response.data)
                 updateCurrencyListWithLiveRate()
@@ -107,7 +98,7 @@ class CurrencyViewModel @Inject constructor(private val repository: CryptoReposi
     }
 
     fun forceRefreshLiveRates() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             fetchLiveRates()
         }
     }
@@ -115,9 +106,10 @@ class CurrencyViewModel @Inject constructor(private val repository: CryptoReposi
     private fun retryCurrencyFetch() {
         fetchCurrencyList()
     }
+
 }
 
 /**
- * Fetching live rate every 3 minutes
+ * Fetching live rates every 3 minutes
  */
 private const val LIVE_RATE_FETCHING_DELAY = 3 * 60 * 1000L

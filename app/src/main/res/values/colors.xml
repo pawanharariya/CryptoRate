@@ -3,7 +3,11 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
+    <color name="text_color">#000000</color>
+    <color name="text_color_secondary">#272626</color>
+    <color name="text_toolbar">#000000</color>
 
+    <color name="toolbar_background">#FFFFFF</color>
     <!--SnackBar Colors-->
     <color name="snackbar_success">#4CAF50</color>
     <color name="snackbar_error">#D32F2F</color>

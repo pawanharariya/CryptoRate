@@ -1,4 +1,4 @@
-package com.psh.project.cryptorate.data
+package com.psh.project.cryptorate.data.remote
 
 import com.psh.project.cryptorate.data.model.CurrencyListResponse
 import com.psh.project.cryptorate.data.model.LiveRateResponse

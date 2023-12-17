@@ -29,12 +29,19 @@ class CurrencyAdapter : ListAdapter<Currency, CurrencyViewHolder>(DiffCallback) 
         }
 
         fun updateRating(liveRating: Double) {
-            binding.rate.text = liveRating.toString();
+            val rounded = String.format("%.6f", liveRating)
+            binding.rate.text = "\$ $rounded"
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CurrencyViewHolder {
-        return CurrencyViewHolder(ListItemCurrencyBinding.inflate(LayoutInflater.from(parent.context)))
+        return CurrencyViewHolder(
+            ListItemCurrencyBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
     }
 
     override fun onBindViewHolder(holder: CurrencyViewHolder, position: Int) {
@@ -49,10 +56,10 @@ class CurrencyAdapter : ListAdapter<Currency, CurrencyViewHolder>(DiffCallback) 
         } else holder.updateRating(payload[0] as Double)
     }
 
-    fun updateLiveRating(liveRate: Map<String, Double>) {
+    fun updateLiveRating() {
         for (i in 0..<itemCount) {
             val item = getItem(i)
-            notifyItemChanged(i, liveRate[item.symbol])
+            notifyItemChanged(i, item.exchangeRate)
         }
     }
 }

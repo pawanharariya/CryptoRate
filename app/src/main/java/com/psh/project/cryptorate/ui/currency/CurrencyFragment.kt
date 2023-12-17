@@ -34,7 +34,7 @@ class CurrencyFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.swipeRefreshLayout.setOnRefreshListener {
-            refreshLiveRates()
+            viewModel.forceRefreshLiveRates()
             binding.swipeRefreshLayout.isRefreshing = false
             // dismiss existing snackbar if any
             snackbar?.dismiss()
@@ -52,7 +52,7 @@ class CurrencyFragment : Fragment() {
 
         viewModel.liveRateMap.observe(viewLifecycleOwner) {
             it?.let {
-                currencyAdapter.updateLiveRating(it)
+                currencyAdapter.updateLiveRating()
             }
         }
 
@@ -61,10 +61,6 @@ class CurrencyFragment : Fragment() {
                 snackbar = view.snackbar(it)
             }
         }
-    }
-
-    private fun refreshLiveRates() {
-        viewModel.forceRefreshLiveRates()
     }
 
     // live rates will only be fetched when fragment is visible

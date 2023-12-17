@@ -1,27 +1,33 @@
 package com.psh.project.cryptorate.data.model
 
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
+@Entity(tableName = "currency")
 data class Currency(
     /**
      * Symbol of Crypto Currency, works as unique ID
      */
-    val symbol: String,
+    @PrimaryKey
+    val symbol: String ,
 
     /**
-     * Full name of the Crypto Currency
+     * Name of the Crypto Currency
      */
-    @SerializedName("name_full")
     val name: String,
 
     /**
      * Url of the icon
      */
+    @ColumnInfo(name = "icon_url")
     @SerializedName("icon_url")
     val iconUrl: String,
 
     /**
      * Exchange rate in USD
      */
-    var exchangeRate: String = ""
+    @ColumnInfo(name = "exchange_rate")
+    var exchangeRate: Double = 0.0
 )

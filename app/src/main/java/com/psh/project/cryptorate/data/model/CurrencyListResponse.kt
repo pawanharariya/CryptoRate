@@ -12,7 +12,7 @@ data class CurrencyListResponse(
      * Map of Crypto Symbol to Crypto [Currency]
      */
     @SerializedName("crypto")
-    val currencies: MutableMap<String, Currency>?,
+    val currencies: Map<String, Currency>?,
 
     /**
      * Received in case of Error

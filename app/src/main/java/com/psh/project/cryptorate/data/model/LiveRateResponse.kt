@@ -12,7 +12,7 @@ data class LiveRateResponse(
      * Map of Crypto Symbol to live rate in USD
      */
     @SerializedName("rates")
-    val rates: MutableMap<String, Double>?,
+    val rates: Map<String, Double>?,
 
     /**
      * Received in case of Error
