@@ -18,3 +18,4 @@ A demo app that fetch live crypto exchange rate.
 8. DataBinding and Binding Adapters
 9. Dagger-Hilt for Dependency Injection
 10. Error Handling and Retry mechanisms
+11. No Internet Alert
