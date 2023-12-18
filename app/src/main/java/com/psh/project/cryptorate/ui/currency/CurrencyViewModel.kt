@@ -9,6 +9,7 @@ import com.psh.project.cryptorate.data.CryptoRepository
 import com.psh.project.cryptorate.data.model.Currency
 import com.psh.project.cryptorate.data.model.Result.Error
 import com.psh.project.cryptorate.data.model.Result.Success
+import com.psh.project.cryptorate.data.prefs.SharedPreferencesManager
 import com.psh.project.cryptorate.utils.SnackbarData
 import com.psh.project.cryptorate.utils.SnackbarType
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,10 +18,16 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
-class CurrencyViewModel @Inject constructor(private val repository: CryptoRepository) :
+class CurrencyViewModel @Inject constructor(
+    private val repository: CryptoRepository,
+    private val sharedPreferencesManager: SharedPreferencesManager
+) :
     ViewModel() {
     private val _currencyList = MutableLiveData<List<Currency>?>()
     val currencyList: LiveData<List<Currency>?> = _currencyList
@@ -30,6 +37,9 @@ class CurrencyViewModel @Inject constructor(private val repository: CryptoReposi
 
     private var repeatedLiveRateFetchJob: Job? = null
 
+    private val _lastRefreshTime = MutableLiveData<String>()
+    val lastRefreshTime: LiveData<String> = _lastRefreshTime
+
     /**
      * LiveData for all snackbar events
      */
@@ -38,6 +48,7 @@ class CurrencyViewModel @Inject constructor(private val repository: CryptoReposi
 
     init {
         fetchCurrencyList()
+        _lastRefreshTime.value = sharedPreferencesManager.getLastFetchedTime()
     }
 
     private fun fetchCurrencyList() {
@@ -89,12 +100,21 @@ class CurrencyViewModel @Inject constructor(private val repository: CryptoReposi
             is Success -> {
                 _liveRateMap.postValue(response.data)
                 updateCurrencyListWithLiveRate()
+                updateLastFetchedTime()
             }
 
             is Error -> _snackbarEvent.postValue(
                 Event(SnackbarData(response.message, SnackbarType.ERROR) { retryCurrencyFetch() })
             )
         }
+    }
+
+    private fun updateLastFetchedTime() {
+        val currentDate = Date()
+        val formatter = SimpleDateFormat("HH:mm a", Locale.US)
+        val formattedDateTime = formatter.format(currentDate)
+        _lastRefreshTime.postValue(formattedDateTime)
+        sharedPreferencesManager.saveLastFetchedTime(formattedDateTime)
     }
 
     fun forceRefreshLiveRates() {

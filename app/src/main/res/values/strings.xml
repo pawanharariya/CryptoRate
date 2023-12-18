@@ -8,5 +8,6 @@
     <string name="error_no_internet">No Internet Connection!</string>
     <string name="unknown_error">Unknown Error</string>
 
+    <string name="last_refreshed_text">Last refreshed at %s</string>
     <string name="snackbar_retry_text">RETRY</string>
 </resources>

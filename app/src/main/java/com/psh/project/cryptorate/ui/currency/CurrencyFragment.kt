@@ -61,6 +61,10 @@ class CurrencyFragment : Fragment() {
                 snackbar = view.snackbar(it)
             }
         }
+
+        viewModel.lastRefreshTime.observe(viewLifecycleOwner) {
+            binding.lastUpdateText.text = getString(R.string.last_refreshed_text, it)
+        }
     }
 
     // live rates will only be fetched when fragment is visible
