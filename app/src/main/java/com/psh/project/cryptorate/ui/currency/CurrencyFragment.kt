@@ -63,7 +63,8 @@ class CurrencyFragment : Fragment() {
         }
 
         viewModel.lastRefreshTime.observe(viewLifecycleOwner) {
-            binding.lastUpdateText.text = getString(R.string.last_refreshed_text, it)
+            if (it.isNotEmpty())
+                binding.lastUpdateText.text = getString(R.string.last_refreshed_text, it)
         }
     }
 
