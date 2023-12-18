@@ -1,10 +1,10 @@
 # Crypto Rate #
 
-A demo app that fetch live crypto exchange rate.
+A demo app that fetches live crypto exchange rate.
 
 ## App Preview ##
 
-<img src="./demo/app_preview_dark.jpeg" alt="Dark Mode" width=280/> <img src="./demo/app_preview_light.jpeg" alt = "Light Mode" width=280/> 
+<img src="./preview/app_preview_dark.jpeg" alt="Dark Mode" width=280/> <img src="./preview/app_preview_light.jpeg" alt = "Light Mode" width=280/> 
 
 ## Features ##
 
